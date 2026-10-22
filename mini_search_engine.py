@@ -1,6 +1,6 @@
 from pathlib import Path
 import files
-import search as search_module
+import query
 
 class MiniSearchEngine:
     def __init__(self, folder_path):
@@ -15,9 +15,11 @@ class MiniSearchEngine:
     def search(self, word: str) -> set[Path]:
         return self.index.get(word.lower(), set())
 
+    
 if __name__ == "__main__":
-    engine = MiniSearchEngine("Path")
+    engine = MiniSearchEngine("/home/mangnanti/Programmation/Audits")
     print(f"Fichiers indexés: {len(engine.contents)}")
     print(f"Mots distincts: {len(engine.index)}")
-    result = search_module.search_and(engine, "your", "project")
-    print("Fichiers trouvés:", [f.name for f in result])
+    request = "your and project and malloc"
+    result = query.evaluate(engine, request)
+    print("Fichiers trouvés:", [f.name for f in result])    
