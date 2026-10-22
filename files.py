@@ -3,11 +3,11 @@ from pathlib import Path
 def index_by_glob(engine, pattern: str) -> None:
     for file_path in engine.folder.rglob(pattern):
         try:
-            text = file_path.read_text(endcoding="utf-8")
+            text = file_path.read_text(encoding="utf-8")
         except OSError as exc:
             print(f"⚠️ Playback impossible: {file_path} {exc}")
             continue
-        engine.contens[file_path] = text
+        engine.contents[file_path] = text
         tokens = {w.strip(".,!?\"'();:") for w in text.split()}
         for token in tokens:
             if token not in engine.index:
