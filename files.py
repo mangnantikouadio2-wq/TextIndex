@@ -10,9 +10,7 @@ def index_by_glob(engine, pattern: str) -> None:
         engine.contents[file_path] = text
         tokens = {w.strip(".,!?\"'();:") for w in text.split()}
         for token in tokens:
-            if token not in engine.index:
-                engine.index[token] = set()
-            engine.index[token].add(file_path)
+            engine.index.setdefault(token, set()).add(file_path)
 
 
 def index_text_files(engine) -> None:
