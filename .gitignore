@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# Fichiers de verrouillage
+.~lock.*#
+
+# Environnements virtuels
+venv/
+.env
+
+#Fichiers systeme
+.DS_Store
