@@ -47,3 +47,15 @@ def evaluate(engine, query: str) -> set[Path]:
             sub_result = search_not(engine, *group_word)
             result -= sub_result
     return result
+
+def snippet(engine, path: Path, words: list[str], maxlen: int = 120) -> str:
+    text = engine.contents.get(path, "")
+    lowered = text.lower()
+    for w in words:
+        pos = lowered.find(w.lower())
+        if pos != -1:
+            start = max(0, pos -30)
+            end = min(len(text), pos + len(w) + maxlen)
+            excerpt = text[start:end].replace("\n", " ").strip()
+            return ("..." if start > 0 else "") + excerpt + ("..." if end < len(text) else "")
+    return text.splitlines()[0] if text else "(empty)"
