@@ -77,7 +77,7 @@ This approach avoids rereading every file for each individual search. The index 
 Clone the repository:
 
 ```text
-git clone git@github.com:mangnantikouadio2-wq/TextIndex
+git clone git@github.com:mangnantikouadio2-wq/TextIndex.git
 cd TextIndex
 ```
 
