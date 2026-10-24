@@ -6,7 +6,7 @@ def index_by_glob(engine, pattern: str) -> None:
         if any(part in EXCLUDED for part in file_path.parts):
             continue
         try:
-            text = file_path.read_text(encoding="utf-8")
+            text = file_path.read_text(encoding="utf-8").lower()
         except OSError as exc:
             print(f"⚠️ Playback impossible: {file_path} {exc}")
             continue
