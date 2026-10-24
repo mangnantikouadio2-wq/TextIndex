@@ -40,6 +40,10 @@ def repl(folder: Path) -> None:
         if request == ":help":
             print(HELP)
             continue
+        if request == ":reload":
+            engine.reload()
+            print(f"♻️ Re-indexed: {len(engine.contents)}")
+            continue
         start = time.perf_counter()
         results = query.evaluate(engine, request)
         elapsed = (time.perf_counter() - start) * 1000 
