@@ -45,7 +45,11 @@ def repl(folder: Path) -> None:
             print(f"♻️ Re-indexed: {len(engine.contents)}")
             continue
         start = time.perf_counter()
-        results = query.evaluate(engine, request)
+        try:
+            results = query.evaluate(engine, request)
+        except Exception as exc:
+            print(f"❌ Query error: {exc}")
+            continue
         elapsed = (time.perf_counter() - start) * 1000 
         results_format(results, engine, request, elapsed, folder)
 

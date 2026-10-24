@@ -19,6 +19,8 @@ def files_with_any(engine, *words: str) -> set[Path]:
     return excluded
 
 def tokenize(query: str) -> tuple[list[tuple[str, list[str]]], list[str]]:
+    if any(c in query for c in '()"'):
+        print("⚠️ Parentheses/quotes not supported -- ignored")
     tokens = query.split()
     if not tokens:
         return [], []
@@ -26,7 +28,12 @@ def tokenize(query: str) -> tuple[list[tuple[str, list[str]]], list[str]]:
     all_words: list[str] = []
     operator = "OR"
     words: list[str] = []
+    prev_was_operator = False
     for token in tokens:
+        is_op = token.upper() in OPERATORS
+        if is_op and prev_was_operator:
+            print(f"⚠️ Two operators in a row near '{token}' -- ignored.")
+            continue
         if token.upper() in OPERATORS:
             if words:
                 groups.append((operator, words))
@@ -35,11 +42,17 @@ def tokenize(query: str) -> tuple[list[tuple[str, list[str]]], list[str]]:
         else:
             words.append(token)
             all_words.append(token)
+        prev_was_operator = is_op
     if words:
         groups.append((operator, words))
     return (groups, all_words)
 
 def evaluate(engine, query: str) -> set[Path]:
+    tokens = query.split()
+    if tokens and tokens[-1].upper() in OPERATORS:
+        print(f"⚠️ Query ends with operator '{tokens[-1]}' -- ignored.")
+        tokens = tokens[:-1]
+        query = " ".join(tokens)
     groups, _ = tokenize(query)
     if not groups:
         return set()
