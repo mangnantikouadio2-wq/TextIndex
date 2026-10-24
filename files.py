@@ -6,12 +6,13 @@ def index_by_glob(engine, pattern: str) -> None:
         if any(part in EXCLUDED for part in file_path.parts):
             continue
         try:
-            text = file_path.read_text(encoding="utf-8").lower()
+            text = file_path.read_text(encoding="utf-8")
         except OSError as exc:
             print(f"⚠️ Playback impossible: {file_path} {exc}")
             continue
         engine.contents[file_path] = text
-        tokens = {w.strip(".,!?\"'();:") for w in text.split()}
+        tokens = {w.strip(".,!?\"'();:").lower() for w in text.split()}
+        tokens.discard("")
         for token in tokens:
             engine.index.setdefault(token, set()).add(file_path)
 
