@@ -1,7 +1,10 @@
 from pathlib import Path
 
+EXCLUDED = {".venv", "venv", "__pycache__", ".git", "node_modules", "build", ".pytest_cache"}
 def index_by_glob(engine, pattern: str) -> None:
     for file_path in engine.folder.rglob(pattern):
+        if any(part in EXCLUDED for part in file_path.parts):
+            continue
         try:
             text = file_path.read_text(encoding="utf-8")
         except OSError as exc:

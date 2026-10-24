@@ -16,14 +16,16 @@ Search synthaxes:
     Ex : python AND descriptors NOT
 """
 
-def results_format(results: set[Path], engine: MiniSearchEngine, root: Path) -> None:
+def results_format(results: set[Path], engine: MiniSearchEngine, query_str: str, elapsed_ms: float, root: Path) -> None:
     if not results:
         print("❌ No result found.")
         return
-    print(f"\n📄 {len(results)} file(s) found\n")
+    print(f"\n📄 {len(results)} file(s) found in {elapsed_ms:.2f} ms\n")
     for path in sorted(results):
         rel = path.relative_to(root) if path.is_relative_to(root) else path
+        extract = query.snippet(engine, path, query_str)
         print(f"    ·{path.name} ({rel})")
+        print(f"       ↳{extract}")
         print()
 
 def repl(folder: Path) -> None:
@@ -33,7 +35,7 @@ def repl(folder: Path) -> None:
     while True:
         request = input("Search > ")
         if not request: continue
-        if request in (":exit", "quit", "q"):
+        if request in (":exit", ":quit", ":q"):
             break
         if request == ":help":
             print(HELP)
@@ -41,7 +43,7 @@ def repl(folder: Path) -> None:
         start = time.perf_counter()
         results = query.evaluate(engine, request)
         elapsed = (time.perf_counter() - start) * 1000 
-        results_format(results, engine, folder)
+        results_format(results, engine, request, elapsed, folder)
 
 if __name__ == "__main__":
     target = Path(input("Folder to scrapp > "))
